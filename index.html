@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Sweat Balance | Train Smarter for Weekend Adventures</title>
+    <meta name="description" content="Personalized workout plans for weekend warriors. Prevent injuries, stay fresh for trail runs, mountain biking, skiing & more. Join the waitlist for early access.">
+    <meta name="keywords" content="weekend warrior workout, trail running training, mountain biking fitness, ski conditioning, injury prevention workouts, outdoor athlete training">
+    <meta name="author" content="Sweat Balance">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sweatbalance.com/">
+    <meta property="og:title" content="Sweat Balance | Train Smarter for Weekend Adventures">
+    <meta property="og:description" content="Personalized workout plans designed for weekend warriors. Get ready for your next adventure.">
+    <meta property="og:image" content="./reference files/logo.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sweat Balance | Train Smarter for Weekend Adventures">
+    <meta name="twitter:description" content="Personalized workout plans designed for weekend warriors.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./reference files/logo.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --primary-cyan: #22D3EE;
+            --primary-cyan-dark: #06B6D4;
+            --accent-coral: #F87171;
+            --accent-coral-dark: #EF4444;
+            --text-dark: #1F2937;
+            --text-gray: #6B7280;
+            --text-light: #9CA3AF;
+            --bg-white: #FFFFFF;
+            --bg-light: #F9FAFB;
+            --bg-gradient: linear-gradient(135deg, #F0FDFA 0%, #ECFEFF 50%, #FEF2F2 100%);
+            --success-green: #10B981;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--accent-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-cyan-dark) 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--accent-coral) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+            }
+        }
+
+        /* App Preview */
+        .app-preview {
+            order: 2;
+        }
+
+        @media (min-width: 768px) {
+            .app-preview {
+                order: 1;
+            }
+        }
+
+        .phone-mockup {
+            position: relative;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .phone-frame {
+            background: var(--text-dark);
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .phone-screen {
+            border-radius: 32px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .phone-screen img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .floating-badge {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .floating-badge.top-right {
+            top: 10%;
+            right: -20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-badge.bottom-left {
+            bottom: 15%;
+            left: -20px;
+            animation: float 3s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating-badge .icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        /* Form Section */
+        .form-section {
+            order: 1;
+        }
+
+        @media (min-width: 768px) {
+            .form-section {
+                order: 2;
+            }
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(34, 211, 238, 0.1);
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .form-header p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-coral) 0%, var(--accent-coral-dark) 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(248, 113, 113, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .form-footer p {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .form-footer .privacy-link {
+            color: var(--primary-cyan-dark);
+            text-decoration: none;
+        }
+
+        /* Success State */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success-green) 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        .success-message h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+
+        .success-message p {
+            color: var(--text-gray);
+        }
+
+        /* Features Section */
+        .features {
+            margin-top: 4rem;
+            padding-top: 4rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            color: var(--text-dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon.cyan {
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
+            color: var(--primary-cyan-dark);
+        }
+
+        .feature-icon.coral {
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.2) 0%, rgba(248, 113, 113, 0.1) 100%);
+            color: var(--accent-coral-dark);
+        }
+
+        .feature-icon.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+            color: var(--success-green);
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        /* Social Proof */
+        .social-proof {
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .avatars {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid white;
+            background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--accent-coral) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-left: -12px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .avatar:first-child {
+            margin-left: 0;
+        }
+
+        .social-proof p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        .social-proof strong {
+            color: var(--text-dark);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer p {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        /* Error State */
+        .error-message {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            color: #DC2626;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .floating-badge {
+                display: none;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .main-container {
+                padding: 1rem 1rem 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container">
+            <img src="./reference files/logo.png" alt="Sweat Balance Logo" class="logo">
+            <span class="logo-text">Sweat Balance</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="badge">🚀 Coming Soon — Join the Waitlist</span>
+            <h1>Train Smarter.<br><span class="highlight">Crush Weekends.</span></h1>
+            <p class="subtitle">Personalized workout plans built for weekend warriors. Stay injury-free and ready for trail runs, mountain biking, skiing, and more.</p>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- App Preview -->
+            <div class="app-preview">
+                <div class="phone-mockup">
+                    <div class="floating-badge top-right">
+                        <span class="icon">✅</span> Offline Ready
+                    </div>
+                    <div class="floating-badge bottom-left">
+                        <span class="icon">🏔️</span> Weekend Ready
+                    </div>
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <img src="./reference files/sweat-balance screenshot.png" alt="Sweat Balance App Preview - Weekly workout planner for weekend warriors">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="form-card">
+                    <div id="formContainer">
+                        <div class="form-header">
+                            <h2>Get Early Access</h2>
+                            <p>Be the first to train smarter. Join the founding members getting early access.</p>
+                        </div>
+
+                        <div id="errorMessage" class="error-message"></div>
+
+                        <form id="signupForm" class="signup-form">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input 
+                                    type="text" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    placeholder="Enter your first name"
+                                    required
+                                    autocomplete="given-name"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email" 
+                                    placeholder="you@example.com"
+                                    required
+                                    autocomplete="email"
+                                >
+                            </div>
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                Join the Waitlist
+                            </button>
+                        </form>
+
+                        <div class="form-footer">
+                            <p>🔒 No spam, ever. Unsubscribe anytime.</p>
+                        </div>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div id="successMessage" class="success-message">
+                        <div class="success-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3>You're on the list!</h3>
+                        <p>We'll notify you when Sweat Balance launches. Get ready to train smarter and crush your weekend adventures!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section class="features">
+            <h2>Why Weekend Warriors Love Us</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon cyan">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3>Personalized Plans</h3>
+                    <p>Weekly workouts tailored to your sport, schedule, and equipment. No more guessing what to do.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon coral">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h3>Injury Prevention</h3>
+                    <p>Protect your weak links with smart exercise selection. Stay healthy for every weekend adventure.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3>Works Offline</h3>
+                    <p>Log workouts anywhere—gym, trail, or mountaintop. Syncs automatically when you're back online.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof -->
+        <section class="social-proof">
+            <div class="avatars">
+                <div class="avatar">🏔️</div>
+                <div class="avatar">🚴</div>
+                <div class="avatar">🏃</div>
+                <div class="avatar">⛷️</div>
+                <div class="avatar">🧗</div>
+            </div>
+            <p><strong>Join the founding members</strong> — early access spots are limited</p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Sweat Balance. Built for weekend warriors, by weekend warriors.</p>
+    </footer>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        // Replace these with your Supabase project credentials
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================
+        // FORM HANDLING
+        // ============================================
+        const form = document.getElementById('signupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formContainer = document.getElementById('formContainer');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get form values
+            const firstName = document.getElementById('firstName').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            // Validate
+            if (!firstName || !email) {
+                showError('Please fill in all fields.');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            // Show loading state
+            setLoading(true);
+            hideError();
+
+            try {
+                // Insert into Supabase
+                const { data, error } = await supabase
+                    .from('waitlist')
+                    .insert([
+                        {
+                            first_name: firstName,
+                            email: email,
+                            signed_up_at: new Date().toISOString()
+                        }
+                    ]);
+
+                if (error) {
+                    // Check for duplicate email
+                    if (error.code === '23505') {
+                        showError('This email is already on the waitlist!');
+                    } else {
+                        throw error;
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                // Success - show success message
+                showSuccess();
+
+            } catch (err) {
+                console.error('Error:', err);
+                showError('Something went wrong. Please try again.');
+                setLoading(false);
+            }
+        });
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="loading-spinner"></span>Joining...';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Join the Waitlist';
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        function hideError() {
+            errorMessage.classList.remove('show');
+        }
+
+        function showSuccess() {
+            formContainer.style.display = 'none';
+            successMessage.classList.add('show');
+        }
+    </script>
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Sweat Balance",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web",
+        "description": "Personalized workout plans for weekend warriors. Train smarter during the week to prevent injury and stay fresh for trail runs, mountain biking, skiing, and outdoor adventures.",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</body>
+</html>
